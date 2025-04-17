@@ -24,9 +24,28 @@ class Recipe(db.Model):
         return f"Recipe(id={self.id}, title='{self.title}', description='{self.description}', servings={self.serviings})"
 
 # connect sql to web app
-    with app.app_context():
-        db.create_all()
-        db.session.commit()
+#    with app.app_context():
+#        db.create_all()
+#        db.session.commit()
+
+# create app routes
+@app.route("/api/recipes", methods=["GET"])
+
+# build API directory with endpoints
+def get_all_recipes():
+    recipes = Recipe.query.all()
+    recipe_list = []
+    for recipe in recipes:
+        recipe_list.append({
+            'id': recipe.id,
+            'title': recipe.title,
+            'ingredients': recipe.ingredients,
+            'instructions': recipe.instructions,
+            'description': recipe.description,
+            'image_url': recipe.image_url,
+            'servings': recipe.servings
+        })
+    return jsonify(recipe_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
